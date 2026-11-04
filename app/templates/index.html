@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zona 2 · Seguimiento de entrenamiento aeróbico</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="cabecera">
+    <h1>Zona 2</h1>
+    <p>Seguimiento de entrenamiento aeróbico con la fórmula de Karvonen</p>
+  </header>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+
+  <main class="rejilla">
+    <!-- 1. Usuario -->
+    <section class="tarjeta" aria-labelledby="t-usuario">
+      <h2 id="t-usuario">1. Usuario</h2>
+
+      <label for="sel-usuario">Usuario registrado</label>
+      <select id="sel-usuario">
+        <option value="">— Selecciona un usuario —</option>
+      </select>
+
+      <details class="nuevo" id="detalle-nuevo">
+        <summary>Registrar un usuario nuevo</summary>
+        <form id="form-usuario" novalidate>
+          <label for="u-nombre">Nombre</label>
+          <input id="u-nombre" name="nombre" type="text" maxlength="100" required autocomplete="name">
+
+          <div class="fila">
+            <div>
+              <label for="u-edad">Edad (años)</label>
+              <input id="u-edad" name="edad" type="number" min="10" max="100" step="1" required>
+            </div>
+            <div>
+              <label for="u-reposo">FC en reposo (lpm)</label>
+              <input id="u-reposo" name="fc_reposo" type="number" min="30" max="120" step="1" required>
+            </div>
+          </div>
+          <button type="submit">Guardar usuario</button>
+        </form>
+      </details>
+
+      <div id="panel-zona" class="zona" hidden>
+        <h3>Tu zona 2</h3>
+        <p class="rango"><span id="z-inf">–</span> a <span id="z-sup">–</span> <small>lpm</small></p>
+        <dl>
+          <div><dt>FC máxima teórica</dt><dd id="z-max">–</dd></div>
+          <div><dt>Reserva de FC</dt><dd id="z-res">–</dd></div>
+          <div><dt>FC en reposo</dt><dd id="z-rep">–</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 2. Registrar sesión -->
+    <section class="tarjeta" aria-labelledby="t-sesion">
+      <h2 id="t-sesion">2. Registrar sesión</h2>
+      <form id="form-sesion" novalidate>
+        <fieldset id="campos-sesion" disabled>
+          <label for="s-fecha">Fecha</label>
+          <input id="s-fecha" name="fecha" type="date" required>
+
+          <div class="fila">
+            <div>
+              <label for="s-duracion">Duración (min)</label>
+              <input id="s-duracion" name="duracion_min" type="number" min="1" max="600" step="1" required>
+            </div>
+            <div>
+              <label for="s-fc">FC promedio (lpm)</label>
+              <input id="s-fc" name="fc_promedio" type="number" min="30" max="230" step="1" required>
+            </div>
+          </div>
+
+          <label for="s-minz2">Minutos dentro de zona 2 <span class="opcional">(opcional)</span></label>
+          <input id="s-minz2" name="minutos_zona2" type="number" min="0" max="600" step="1">
+          <p class="ayuda">Si tu reloj o app te dice cuánto tiempo estuviste en zona 2, escríbelo aquí para ver el porcentaje de la sesión.</p>
+
+          <button type="submit">Guardar sesión</button>
+        </fieldset>
+      </form>
+      <p id="msg-sin-usuario" class="ayuda">Selecciona o registra un usuario para habilitar este formulario.</p>
+    </section>
+
+    <!-- 3. Histórico -->
+    <section class="tarjeta ancha" aria-labelledby="t-historico">
+      <h2 id="t-historico">3. Histórico de sesiones</h2>
+
+      <form id="form-filtro" class="filtro" novalidate>
+        <div>
+          <label for="f-desde">Desde</label>
+          <input id="f-desde" type="date">
+        </div>
+        <div>
+          <label for="f-hasta">Hasta</label>
+          <input id="f-hasta" type="date">
+        </div>
+        <button type="submit" class="secundario">Filtrar</button>
+        <button type="button" id="btn-limpiar" class="secundario">Limpiar</button>
+      </form>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Duración</th>
+              <th>FC promedio</th>
+              <th>Resultado</th>
+              <th>% en zona 2</th>
+              <th><span class="solo-lector">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-historico"></tbody>
+        </table>
+      </div>
+      <p id="vacio" class="ayuda">Aún no hay sesiones para mostrar.</p>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
